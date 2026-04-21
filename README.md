@@ -264,6 +264,6 @@ MIT License. Free to use, modify, and distribute.
 
 ## Author
 
-Sayem Hossain
+S. M. Sayem Hossain
 
 Built as a demonstration of MCP server development applied to quantum computing. Contributions and issues welcome.
