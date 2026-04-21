@@ -9,7 +9,7 @@ Built with FastMCP and Python. Works with Gemini CLI, Claude Desktop, and any MC
 ![FastMCP](https://img.shields.io/badge/FastMCP-3.2.4-purple?style=flat-square)
 ![MCP](https://img.shields.io/badge/MCP-1.27.0-green?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
 
 ## What is Orbital?
 
@@ -17,89 +17,98 @@ Most AI assistants can *talk about* quantum computing. Orbital lets them *do* qu
 
 When an AI agent connects to Orbital, it gains three powerful quantum tools it can invoke autonomously — no quantum expertise required from the user.
 
-
 ## Architecture
-User (Natural Language)
-│
-▼
-AI Agent (Gemini / Claude)
-│
-│  MCP Protocol
-▼
-┌─────────────────────┐
-│   Orbital Server    │
-│  ─────────────────  │
-│  qc_estimate_       │
-│  resources          │
-│                     │
-│  qc_simulate_qaoa   │
-│                     │
-│  qc_run_vqe         │
-└─────────────────────┘
-│
-▼
-Quantum Simulation
-Engine (FastMCP +
-Pydantic)
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        USER                                 │
+│              "Calculate H2 ground state energy"             │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  Natural Language
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    AI AGENT                                 │
+│                 Gemini CLI / Claude                         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  MCP Protocol
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  ORBITAL SERVER                             │
+│                                                             │
+│   ┌─────────────────┐  ┌─────────────────┐  ┌──────────┐   │
+│   │ qc_estimate_    │  │ qc_simulate_    │  │ qc_run_  │   │
+│   │ resources       │  │ qaoa            │  │ vqe      │   │
+│   └─────────────────┘  └─────────────────┘  └──────────┘   │
+│                                                             │
+│              FastMCP 3.2.4  +  Pydantic v2                  │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│              QUANTUM SIMULATION ENGINE                      │
+│         Resource Estimation · QAOA · VQE                    │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Tools
 
-### qc_estimate_resources
-Estimates the quantum resources required to run an algorithm before executing it. Returns qubit count, circuit depth, runtime estimate, fidelity, and a FEASIBLE / NOT FEASIBLE verdict.
+### `qc_estimate_resources`
+Estimates the quantum resources required to run an algorithm **before** executing it. Returns qubit count, circuit depth, runtime estimate, fidelity, and a `FEASIBLE / NOT FEASIBLE` verdict.
 
-**Inputs**
-- `algorithm` — QAOA, VQE, QSVM, or Grover
-- `problem_size` — number of qubits required (1–100)
-- `hardware_profile` — ideal_simulator, noisy_simulator, ibm_eagle, ionq_aria
-- `include_error_mitigation` — boolean
+| Input | Type | Description |
+|-------|------|-------------|
+| `algorithm` | enum | QAOA, VQE, QSVM, Grover |
+| `problem_size` | int (1–100) | Number of qubits required |
+| `hardware_profile` | enum | ideal_simulator, noisy_simulator, ibm_eagle, ionq_aria |
+| `include_error_mitigation` | bool | Factor in error mitigation overhead |
 
-**Example agent prompt**
-> "Can my problem run on IonQ Aria hardware with 20 qubits using VQE?"
+> **Example:** *"Can my 20-qubit VQE problem run on IonQ Aria hardware?"*
 
+### `qc_simulate_qaoa`
+Runs a Quantum Approximate Optimization Algorithm simulation on a problem graph. Solves Max-Cut and combinatorial optimization problems. Returns optimal bitstring, approximation ratio, and convergence history.
 
-### qc_simulate_qaoa
-Runs a Quantum Approximate Optimization Algorithm simulation on a graph. Solves Max-Cut and combinatorial optimization problems. Returns optimal bitstring, approximation ratio, and convergence history.
+| Input | Type | Description |
+|-------|------|-------------|
+| `problem_graph` | dict | Nodes and weighted edges as JSON |
+| `p_layers` | int (1–10) | Circuit depth |
+| `shots` | int (100–10000) | Measurement shots |
+| `optimizer` | enum | COBYLA, SPSA, L-BFGS-B |
+| `response_format` | enum | markdown or json |
 
-**Inputs**
-- `problem_graph` — nodes and weighted edges as JSON
-- `p_layers` — circuit depth (1–10)
-- `shots` — measurement shots (100–10000)
-- `optimizer` — COBYLA, SPSA, or L-BFGS-B
-- `response_format` — markdown or json
+> **Example:** *"Optimize this 6-node supply chain graph using QAOA with 3 layers"*
 
-**Example agent prompt**
-> "Optimize this 6-node supply chain graph using QAOA with 3 layers"
-
-
-### qc_run_vqe
+### `qc_run_vqe`
 Runs the Variational Quantum Eigensolver to calculate molecular ground-state energy. Used in quantum chemistry and drug discovery pipelines. Returns energy in Hartree, convergence history, and comparison against FCI baseline.
 
-**Supported molecules** — H2, LiH, BeH2, H2O, NH3
+**Supported molecules:** `H2` · `LiH` · `BeH2` · `H2O` · `NH3`
 
-**Inputs**
-- `molecule` — molecular formula
-- `basis_set` — sto-3g, 6-31g, cc-pvdz
-- `ansatz` — UCCSD, HardwareEfficient, RealAmplitudes
-- `max_iterations` — 10–500
-- `shots` — 100–10000
+| Input | Type | Description |
+|-------|------|-------------|
+| `molecule` | string | Molecular formula |
+| `basis_set` | enum | sto-3g, 6-31g, cc-pvdz |
+| `ansatz` | enum | UCCSD, HardwareEfficient, RealAmplitudes |
+| `max_iterations` | int (10–500) | Optimizer iterations |
+| `shots` | int (100–10000) | Measurement shots |
 
-**Example agent prompt**
-> "Calculate the ground state energy of LiH using the 6-31g basis set"
-
+> **Example:** *"Calculate the ground state energy of LiH using the 6-31g basis set"*
 
 ## Quickstart
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/orbital.git
-cd orbital
+git clone https://github.com/sm-sayem-hossain/Orbital.git
+cd Orbital
 ```
 
 **2. Create virtual environment**
 ```bash
 python -m venv .venv
+
+# Windows
 .venv\Scripts\activate
+
+# macOS / Linux
+source .venv/bin/activate
 ```
 
 **3. Install dependencies**
@@ -119,40 +128,45 @@ gemini
 ```
 
 **6. Try it**
+```
 Calculate the ground state energy of H2 molecule using VQE
-
+```
 
 ## Project Structure
-orbital/
-├── server.py              # FastMCP server entry point
+
+```
+Orbital/
+├── server.py              # FastMCP server — main entry point
 ├── tools/
+│   ├── __init__.py
 │   ├── qaoa.py            # QAOA simulation logic
 │   └── vqe.py             # VQE simulation logic
 ├── core/                  # Shared utilities (coming soon)
 ├── models/                # Pydantic models (coming soon)
 ├── tests/                 # Test suite (coming soon)
-└── evals/                 # Agent evaluation Q&A pairs (coming soon)
-
+├── evals/                 # Agent evaluation Q&A pairs (coming soon)
+├── .gitignore
+└── README.md
+```
 
 ## Roadmap
 
-**Phase 1 — Foundation (complete)**
+**Phase 1 — Foundation** ✅ `complete`
 Working MCP server with 3 quantum tools, Gemini CLI integration, MCP Inspector verified.
 
-**Phase 2 — Real Backends (next)**
+**Phase 2 — Real Backends** `next`
 Replace mock simulations with real Qiskit and PennyLane backends. Connect to IBM Quantum and IonQ hardware APIs.
 
-**Phase 3 — Expansion**
+**Phase 3 — Expansion** `planned`
 Add more algorithms (Grover search, QSVM, QPE), support more molecules, add noise modeling.
 
-**Phase 4 — Production**
+**Phase 4 — Production** `planned`
 HTTP transport, authentication, rate limiting, cloud deployment.
-
 
 ## Tech Stack
 
 | Component | Technology |
-|-----------|-----------|
+|-----------|------------|
 | Language | Python 3.12 |
 | MCP Framework | FastMCP 3.2.4 |
 | Protocol | MCP 1.27.0 |
@@ -160,12 +174,11 @@ HTTP transport, authentication, rate limiting, cloud deployment.
 | Transport | stdio (local), HTTP (planned) |
 | AI Clients | Gemini CLI, Claude Desktop |
 
-
 ## License
 
 MIT License — free to use, modify, and distribute.
 
-
 ## Author
 
+**Sayem Hossain**
 Built from scratch as a demonstration of MCP server development for quantum computing applications.
