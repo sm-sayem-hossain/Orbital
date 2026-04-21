@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "qc_simulation": {
+      "command": "F:\\QC\\.venv\\Scripts\\python.exe",
+      "args": [
+        "F:\\QC\\server.py"
+      ]
+    }
+  }
+}
