@@ -8,3 +8,5 @@ dist/
 build/
 .DS_Store
 gemini_mcp_config.json
+apikey.json
+.env

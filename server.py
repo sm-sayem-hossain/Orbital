@@ -123,5 +123,29 @@ async def qc_run_vqe(params: RunVQEInput) -> str:
     else:
         return format_vqe_markdown(result)
 
+@mcp.tool(
+    name="qc_run_vqe_real",
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": True
+    }
+)
+async def qc_run_vqe_real(molecule: str, shots: int = 1000, ansatz_reps: int = 1) -> str:
+    """Run REAL VQE on IBM Quantum hardware to find molecular ground-state energy.
+    
+    Unlike qc_run_vqe which uses simulation, this tool submits actual quantum circuits
+    to IBM Quantum hardware. Supported molecules: H2, LiH.
+    
+    WARNING: This makes real API calls to IBM Quantum. May take 30-120 seconds.
+    """
+    try:
+        from tools.vqe_real import run_real_vqe
+        result = run_real_vqe(molecule=molecule, ansatz_reps=ansatz_reps, shots=shots)
+        return json.dumps(result, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e), "tip": "Check IBM_QUANTUM_TOKEN in .env file"}, indent=2)
+
 if __name__ == "__main__":
     mcp.run()
