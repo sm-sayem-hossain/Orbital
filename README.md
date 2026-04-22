@@ -176,6 +176,30 @@ Calculate the ground state energy of H2 molecule using VQE
 ```
 
 
+## Hardware Verification
+
+Orbital has been verified on real IBM Quantum hardware. The following result was obtained by submitting an actual VQE quantum circuit to ibm_kingston — a 156-qubit quantum processor located in Washington DC.
+
+![IBM Quantum Job Result](results/ibm_quantum_result.png)
+
+```
+Backend                ibm_kingston (156 qubits)
+Location               Washington DC, us-east
+Algorithm              VQE with EfficientSU2 ansatz
+Molecule               H2
+Shots                  500
+Actual QPU time        11 seconds
+Total time             34 minutes 30 seconds (includes queue wait)
+Ground state energy    -1.0481776276897834 Hartree
+Standard error         0.00981324391775272
+FCI baseline           -1.1373 Hartree
+Status                 Completed
+Job ID                 d7ju79i3fd4c73deh1l0
+```
+
+The energy difference from the FCI baseline is due to quantum noise and decoherence — an expected characteristic of current NISQ-era hardware.
+
+
 ## Project Structure
 
 ```
@@ -189,6 +213,9 @@ Orbital/
 ├── core/
 │   ├── __init__.py
 │   └── ibm_backend.py         # IBM Quantum service connection + backend selection
+├── results/
+│   ├── ibm_job_details.png    # IBM Quantum job dashboard screenshot
+│   └── ibm_quantum_result.png # Quantum circuit and result screenshot
 ├── models/                    # Pydantic models (expanding)
 ├── tests/                     # Test suite (coming soon)
 ├── evals/                     # Agent evaluation Q&A pairs (coming soon)
@@ -240,21 +267,6 @@ HTTP transport, token-based authentication, rate limiting, Docker deployment, cl
 | Transport | stdio (local), HTTP (planned) |
 | AI Clients | Gemini CLI, Claude Desktop |
 | Environment | python-dotenv |
-
-
-## Hardware Verification
-
-Orbital has been tested with real quantum job submission on IBM Quantum Platform.
-
-```
-Backend       ibm_kingston
-Qubits        156
-Job Status    Verified (Pending to Completed)
-Algorithm     VQE with EfficientSU2 ansatz
-Molecule      H2
-Shots         500
-Transpiler    generate_preset_pass_manager, optimization level 1
-```
 
 
 ## License
