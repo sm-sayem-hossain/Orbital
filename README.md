@@ -3,7 +3,7 @@
 
 Orbital is an open-source MCP (Model Context Protocol) server that gives AI agents native access to quantum computing simulations. It bridges the gap between natural language and real quantum hardware, enabling drug discovery, molecular energy calculations, and combinatorial optimization without requiring any quantum expertise from the user.
 
-Tested with Gemini CLI and Claude Desktop. Verified on real IBM Quantum hardware.
+Tested with any MCP-compatible AI agent. Verified on real IBM Quantum hardware.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
 ![FastMCP](https://img.shields.io/badge/FastMCP-3.2.4-purple?style=flat-square)
@@ -30,7 +30,7 @@ Orbital handles everything from circuit construction to IBM Quantum job submissi
 User (Natural Language)
         |
         v
-AI Agent  [Gemini CLI / Claude Desktop]
+AI Agent  [any MCP-compatible AI agent]
         |
         |    MCP Protocol (stdio / HTTP)
         v
@@ -164,10 +164,15 @@ Get your token at [quantum.ibm.com](https://quantum.ibm.com)
 fastmcp inspect server.py
 ```
 
-**Connect to Gemini CLI**
+**Connect to any MCP-compatible AI agent**
+
+Configure your agent to run the server using:
 ```bash
-gemini mcp add orbital .venv\Scripts\python.exe server.py
-gemini
+# Windows
+.venv\Scripts\python.exe server.py
+
+# macOS / Linux
+.venv/bin/python server.py
 ```
 
 **Try it**
@@ -230,7 +235,7 @@ Orbital/
 **Phase 1 - Foundation**
 Status: Complete
 
-Working MCP server with 3 quantum tools, Gemini CLI integration, MCP Inspector verified, GitHub published.
+Working MCP server with 3 quantum tools, any MCP-compatible AI agent integration, MCP Inspector verified, GitHub published.
 
 **Phase 2 - Real Hardware**
 Status: Complete
@@ -265,7 +270,7 @@ HTTP transport, token-based authentication, rate limiting, Docker deployment, cl
 | Hardware Runtime | Qiskit IBM Runtime 0.46.1 |
 | Quantum Hardware | IBM Quantum (ibm_kingston, ibm_fez, ibm_marrakesh) |
 | Transport | stdio (local), HTTP (planned) |
-| AI Clients | Gemini CLI, Claude Desktop |
+| AI Clients | any MCP-compatible AI agent |
 | Environment | python-dotenv |
 
 
