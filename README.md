@@ -1,7 +1,7 @@
 # Orbital
 ### Quantum Simulation MCP Server for AI Agents
 
-Orbital is an open-source MCP (Model Context Protocol) server that gives AI agents native access to quantum computing simulations. It bridges the gap between natural language and real quantum hardware — enabling drug discovery, molecular energy calculations, and combinatorial optimization without requiring any quantum expertise from the user.
+Orbital is an open-source MCP (Model Context Protocol) server that gives AI agents native access to quantum computing simulations. It bridges the gap between natural language and real quantum hardware, enabling drug discovery, molecular energy calculations, and combinatorial optimization without requiring any quantum expertise from the user.
 
 Tested with Gemini CLI and Claude Desktop. Verified on real IBM Quantum hardware.
 
@@ -178,7 +178,7 @@ Calculate the ground state energy of H2 molecule using VQE
 
 ## Hardware Verification
 
-Orbital has been verified on real IBM Quantum hardware. The following result was obtained by submitting an actual VQE quantum circuit to ibm_kingston — a 156-qubit quantum processor located in Washington DC.
+Orbital has been verified on real IBM Quantum hardware. The following result was obtained by submitting an actual VQE quantum circuit to ibm_kingston, a 156-qubit quantum processor located in Washington DC.
 
 ![IBM Quantum Job Result](results/ibm_quantum_result.png)
 
@@ -197,7 +197,7 @@ Status                 Completed
 Job ID                 d7ju79i3fd4c73deh1l0
 ```
 
-The energy difference from the FCI baseline is due to quantum noise and decoherence — an expected characteristic of current NISQ-era hardware.
+The energy difference from the FCI baseline is due to quantum noise and decoherence, an expected characteristic of current NISQ-era hardware.
 
 
 ## Project Structure
@@ -207,12 +207,12 @@ Orbital/
 ├── server.py                  # FastMCP server entry point
 ├── tools/
 │   ├── __init__.py
-│   ├── qaoa.py                # QAOA simulation — inputs, logic, formatting
+│   ├── qaoa.py                # QAOA simulation, inputs, logic, formatting
 │   ├── vqe.py                 # Local VQE simulation
 │   └── vqe_real.py            # Real VQE via IBM Quantum Runtime
 ├── core/
 │   ├── __init__.py
-│   └── ibm_backend.py         # IBM Quantum service connection + backend selection
+│   └── ibm_backend.py         # IBM Quantum service connection and backend selection
 ├── results/
 │   ├── ibm_job_details.png    # IBM Quantum job dashboard screenshot
 │   └── ibm_quantum_result.png # Quantum circuit and result screenshot
@@ -227,27 +227,27 @@ Orbital/
 
 ## Roadmap
 
-**Phase 1 — Foundation**
+**Phase 1 - Foundation**
 Status: Complete
 
 Working MCP server with 3 quantum tools, Gemini CLI integration, MCP Inspector verified, GitHub published.
 
-**Phase 2 — Real Hardware**
+**Phase 2 - Real Hardware**
 Status: Complete
 
 Qiskit 2.4 integration, IBM Quantum Runtime connection, real VQE job submission verified on ibm_kingston (156 qubits).
 
-**Phase 3 — Automated Hamiltonians**
+**Phase 3 - Automated Hamiltonians**
 Status: In progress
 
-PySCF and OpenFermion integration to automatically generate molecular Hamiltonians for any input molecule — removing the need for hardcoded Pauli strings.
+PySCF and OpenFermion integration to automatically generate molecular Hamiltonians for any input molecule, removing the need for hardcoded Pauli strings.
 
-**Phase 4 — Expanded Algorithms**
+**Phase 4 - Expanded Algorithms**
 Status: Planned
 
 Grover search, QSVM, Quantum Phase Estimation, noise modeling, error mitigation strategies.
 
-**Phase 5 — Production**
+**Phase 5 - Production**
 Status: Planned
 
 HTTP transport, token-based authentication, rate limiting, Docker deployment, cloud hosting.
@@ -276,6 +276,6 @@ MIT License. Free to use, modify, and distribute.
 
 ## Author
 
-S. M. Sayem Hossain
+Sayem Hossain
 
 Built as a demonstration of MCP server development applied to quantum computing. Contributions and issues welcome.
